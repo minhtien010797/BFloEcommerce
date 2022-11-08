@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option csharp_namespace = "BFloEcommerceClient.Protos";
+
+package todo;
+
+service TodoService {
+	rpc TodoSend(TodoRequest) returns (TodoResponse);
+}
+
+message TodoRequest {
+	string name = 1;
+}
+
+message TodoResponse {
+	string message = 1;
+}
