@@ -5,7 +5,7 @@ namespace ProductGrpc.Data
 {
     public class ProductsContext : DbContext
     {
-        protected ProductsContext(DbContextOptions<ProductsContext> options) : base(options)
+        public ProductsContext(DbContextOptions<ProductsContext> options) : base(options)
         {
         }
 
