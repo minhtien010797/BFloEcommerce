@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrpcGreeterClient", "GrpcGr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductGrpc", "ProductGrpc\ProductGrpc.csproj", "{91F18F5B-AFEC-4F9A-92EA-200D784FF6BE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductGrpcClient", "ProductGrpcClient\ProductGrpcClient.csproj", "{1703115F-B233-4897-9896-E321366028DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{91F18F5B-AFEC-4F9A-92EA-200D784FF6BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91F18F5B-AFEC-4F9A-92EA-200D784FF6BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91F18F5B-AFEC-4F9A-92EA-200D784FF6BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1703115F-B233-4897-9896-E321366028DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1703115F-B233-4897-9896-E321366028DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1703115F-B233-4897-9896-E321366028DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1703115F-B233-4897-9896-E321366028DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

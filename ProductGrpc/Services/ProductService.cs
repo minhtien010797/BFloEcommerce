@@ -43,8 +43,9 @@ namespace ProductGrpc.Services
 
         public override async Task<ProductModel> GetProductById(GetProductRequest request, ServerCallContext context)
         {
-            var product = await _productsContext.Product.FindAsync(request.ProductId);
+            var product = await _productsContext.Product.FindAsync(Guid.Parse(request.ProductId));
 
+            // Throw exception if enity's null.
             ArgumentNullException.ThrowIfNull(request.ProductId);
 
             return new ProductModel
