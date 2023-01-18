@@ -1,4 +1,5 @@
-﻿using Grpc.Net.Client;
+﻿using Grpc.Core;
+using Grpc.Net.Client;
 using ProductGrpc.Protos;
 
 await GetProductByIdAsync();
@@ -11,7 +12,39 @@ static async Task GetProductByIdAsync()
     using var channel = GrpcChannel.ForAddress("http://localhost:5002");
     var client = new ProductProtoService.ProductProtoServiceClient(channel);
 
+    await GetProductAsync(client);
+    await GetAllProductsAsync(client);
 
+    Console.ReadLine();
+}
+
+static async Task GetAllProductsAsync(ProductProtoService.ProductProtoServiceClient client)
+{
+    //// GetAllProducts
+    //Console.WriteLine("GetAllProducts started..........");
+    //using (var clientData = client.GetAllProducts(new GetAllProductsRequest()))
+    //{
+    //    while (await clientData.ResponseStream.MoveNext(new CancellationToken()))
+    //    {
+    //        var currentProduct = clientData.ResponseStream.Current;
+    //        Console.WriteLine(currentProduct);
+    //    }
+    //}
+
+    // GetAllProducts C#9
+    Console.WriteLine("GetAllProducts started..........");
+    using var clientData = client.GetAllProducts(new GetAllProductsRequest());
+    {
+        await foreach (var responseData in clientData.ResponseStream.ReadAllAsync())
+        {
+            Console.WriteLine(responseData);
+        }
+    };
+}
+
+static async Task GetProductAsync(ProductProtoService.ProductProtoServiceClient client)
+{
+    // GetProductById
     Console.WriteLine("GetProductById started..........");
     var reply = await client.GetProductByIdAsync(
         new GetProductRequest
@@ -21,5 +54,4 @@ static async Task GetProductByIdAsync()
 
 
     Console.WriteLine("GetProductById replied: " + reply.ToString());
-    Console.ReadLine();
 }

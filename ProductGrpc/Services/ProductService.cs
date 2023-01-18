@@ -1,5 +1,6 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
+using Microsoft.EntityFrameworkCore;
 using ProductGrpc.Data;
 using ProductGrpc.Protos;
 
@@ -31,9 +32,24 @@ namespace ProductGrpc.Services
             return base.Equals(obj);
         }
 
-        public override Task GetAllProducts(GetAllProductsRequest request, IServerStreamWriter<ProductModel> responseStream, ServerCallContext context)
+        public override async Task GetAllProducts(GetAllProductsRequest request, IServerStreamWriter<ProductModel> responseStream, ServerCallContext context)
         {
-            return base.GetAllProducts(request, responseStream, context);
+            var productList = await _productsContext.Product.ToListAsync();
+
+            foreach (var item in productList)
+            {
+                var product = new ProductModel
+                {
+                    ProductId = item.ProductId.ToString(),
+                    Name = item.Name,
+                    Description = item.Description,
+                    Price = item.Price,
+                    Status = ProductStatus.Instock,
+                    CreatedTime = Timestamp.FromDateTime(item.CreatedTime)
+                };
+
+                await responseStream.WriteAsync(product);
+            }
         }
 
         public override int GetHashCode()
