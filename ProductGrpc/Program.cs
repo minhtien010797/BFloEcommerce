@@ -14,6 +14,9 @@ builder.Services.AddGrpc();
 builder.Services.AddDbContext<ProductsContext>(options => 
     options.UseInMemoryDatabase("Product"));
 
+// Add AutoMapper to the container.
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

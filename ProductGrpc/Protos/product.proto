@@ -11,6 +11,7 @@ service ProductProtoService {
 
 	rpc AddProduct (AddProductRequest) returns (ProductModel);
 	rpc UpdateProduct (UpdateProductRequest) returns (ProductModel);
+	rpc AddOrUpdateProduct (AddOrUpdateProductRequest) returns (ProductModel);
 	rpc DeleteProduct (DeleteProductRequest) returns (DeleteProductResponse);
 
 	rpc InsertBulkProduct (stream ProductModel) returns (InsertBulkProductResponse);
@@ -29,6 +30,10 @@ message AddProductRequest {
 }
 
 message UpdateProductRequest {
+	ProductModel product = 1;
+}
+
+message AddOrUpdateProductRequest {
 	ProductModel product = 1;
 }
 

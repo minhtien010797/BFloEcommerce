@@ -1,10 +1,11 @@
-﻿using Grpc.Core;
+﻿using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
 using Grpc.Net.Client;
 using ProductGrpc.Protos;
+// Run Main Method()
+await RunConsole();
 
-await GetProductByIdAsync();
-
-static async Task GetProductByIdAsync()
+static async Task RunConsole()
 {
     Console.WriteLine("Waiting for server is running....");
     Thread.Sleep(2000);
@@ -14,8 +15,31 @@ static async Task GetProductByIdAsync()
 
     await GetProductAsync(client);
     await GetAllProductsAsync(client);
+    await AddProductsAsync(client);
 
     Console.ReadLine();
+}
+
+static async Task AddProductsAsync(ProductProtoService.ProductProtoServiceClient client)
+{
+    Console.WriteLine("AddProductsAsync started..........");
+    var addProductResponse = await client.AddProductAsync
+        (
+            new AddProductRequest 
+            {
+                Product = new ProductModel
+                {
+                    ProductId = Guid.Parse("c2e32f6a-df89-42f6-97fa-48eb995c7524").ToString(),
+                    Name = "Product 04",
+                    Description = "New Product 04",
+                    Price = 799,
+                    Status = ProductStatus.Instock,
+                    CreatedTime = Timestamp.FromDateTime(DateTime.UtcNow) 
+                }
+            }
+        );
+
+    Console.WriteLine("AddProductsAsync Response: " + addProductResponse.ToString());
 }
 
 static async Task GetAllProductsAsync(ProductProtoService.ProductProtoServiceClient client)
