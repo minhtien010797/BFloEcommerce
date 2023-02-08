@@ -52,9 +52,23 @@ namespace ProductGrpc.Services
             return productModel;
         }
 
-        public override Task<DeleteProductResponse> DeleteProduct(DeleteProductRequest request, ServerCallContext context)
+        public override async Task<DeleteProductResponse> DeleteProduct(DeleteProductRequest request, ServerCallContext context)
         {
-            return base.DeleteProduct(request, context);
+            var product = await _productsContext.Product.FindAsync(Guid.Parse(request.ProductId));
+            if (product == null)
+            {
+                throw new RpcException(new Status(StatusCode.NotFound, $"The Enity doesn't exist in system with Id: {request.ProductId}"));
+            }
+
+            _productsContext.Product.Remove(product);
+            var deleteCount = await _productsContext.SaveChangesAsync();
+
+            var response = new DeleteProductResponse
+            {
+                Success = deleteCount > 0
+            };
+
+            return response;
         }
 
         public override bool Equals(object? obj)
@@ -113,9 +127,48 @@ namespace ProductGrpc.Services
             return base.ToString();
         }
 
-        public override Task<ProductModel> UpdateProduct(UpdateProductRequest request, ServerCallContext context)
+        public override async Task<ProductModel> UpdateProduct(UpdateProductRequest request, ServerCallContext context)
         {
-            return base.UpdateProduct(request, context);
+            // Mapping model without AutoMapper.
+            var product = new Product
+            {
+                ProductId = Guid.Parse(request.Product.ProductId),
+                Name = request.Product.Name,
+                Description = request.Product.Description,
+                Price = request.Product.Price,
+                Status = Models.ProductStatus.INSTOCK,
+                CreatedTime = request.Product.CreatedTime.ToDateTime()
+            };
+
+            var isExist = await _productsContext.Product.AnyAsync(p => p.ProductId == product.ProductId);
+            if (!isExist)
+            {
+                throw new RpcException(new Status(StatusCode.NotFound, $"The Enity doesn't exist in system with Id: {product.ProductId}"));
+            }
+
+            _productsContext.Entry(product).State = EntityState.Modified;
+
+            try
+            {
+                await _productsContext.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            var productModel = new ProductModel
+            {
+                ProductId = product.ProductId.ToString(),
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                Status = Protos.ProductStatus.Instock,
+                CreatedTime = Timestamp.FromDateTime(product.CreatedTime)
+            };
+
+            return productModel;
         }
     }
 }
