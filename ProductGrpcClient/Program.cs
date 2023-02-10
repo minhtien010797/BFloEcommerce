@@ -13,11 +13,49 @@ static async Task RunConsole()
     using var channel = GrpcChannel.ForAddress("http://localhost:5002");
     var client = new ProductProtoService.ProductProtoServiceClient(channel);
 
-    await GetProductAsync(client);
+    //await GetProductAsync(client);
     await GetAllProductsAsync(client);
     await AddProductsAsync(client);
 
+    await UpdateProductAsync(client);
+    await DeleteProductAsync(client);
+
     Console.ReadLine();
+}
+
+static async Task DeleteProductAsync(ProductProtoService.ProductProtoServiceClient client)
+{
+    Thread.Sleep(3000);
+    Console.WriteLine("DeleteProductAsync started..........");
+    var deleteProductResponse = await client.DeleteProductAsync
+       (
+           new DeleteProductRequest
+           {
+               ProductId = Guid.Parse("c2e32f6a-df89-42f6-97fa-48eb995c7524").ToString()
+           }
+       );
+    Console.WriteLine("DeleteProductAsync Response: " + deleteProductResponse.ToString());
+}
+
+static async Task UpdateProductAsync(ProductProtoService.ProductProtoServiceClient client)
+{
+    Console.WriteLine("UpdateProductAsync started..........");
+    var updateProductResponse = await client.UpdateProductAsync
+       (
+           new UpdateProductRequest
+           {
+               Product = new ProductModel
+               {
+                   ProductId = Guid.Parse("dc7f6668-5b47-40b7-a94a-b2332cbf8186").ToString(),
+                   Name = "Product 01",
+                   Description = "New Product 01 was edited",
+                   Price = 799,
+                   Status = ProductStatus.Instock,
+                   CreatedTime = Timestamp.FromDateTime(DateTime.UtcNow)
+               }
+           }
+       );
+    Console.WriteLine("UpdateProductAsync Response: " + updateProductResponse.ToString());
 }
 
 static async Task AddProductsAsync(ProductProtoService.ProductProtoServiceClient client)

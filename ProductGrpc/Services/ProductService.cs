@@ -98,8 +98,11 @@ namespace ProductGrpc.Services
         {
             var product = await _productsContext.Product.FindAsync(Guid.Parse(request.ProductId));
 
-            // Throw exception if enity's null.
-            ArgumentNullException.ThrowIfNull(request.ProductId);
+            // Throw RPC exception if enity's null.
+            if (product == null)
+            {
+                throw new RpcException(new Status(StatusCode.NotFound, $"The Enity doesn't exist in system with Id: {request.ProductId}"));
+            }
 
             return new ProductModel
             {
