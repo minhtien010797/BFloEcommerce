@@ -85,7 +85,7 @@ namespace ProductGrpc.Services
                 // using AutoMapper to map model
                 var product = _mapper.Map<ProductModel>(item);
 
-                await   responseStream.WriteAsync(product);
+                await responseStream.WriteAsync(product);
             }
         }
 
@@ -115,9 +115,32 @@ namespace ProductGrpc.Services
             };
         }
 
-        public override Task<InsertBulkProductResponse> InsertBulkProduct(IAsyncStreamReader<ProductModel> requestStream, ServerCallContext context)
+        public override async Task<InsertBulkProductResponse> InsertBulkProduct(IAsyncStreamReader<ProductModel> requestStream, ServerCallContext context)
         {
-            return base.InsertBulkProduct(requestStream, context);
+            while (await requestStream.MoveNext())
+            {
+                var product = new Product
+                {
+                    ProductId = Guid.Parse(requestStream.Current.ProductId),
+                    Name = requestStream.Current.Name,
+                    Description = requestStream.Current.Description,
+                    Price = requestStream.Current.Price,
+                    Status = Models.ProductStatus.INSTOCK,
+                    CreatedTime = requestStream.Current.CreatedTime.ToDateTime()
+                };
+
+                _productsContext.Product.Add(product);
+            }
+
+            var insertCount = await _productsContext.SaveChangesAsync();
+
+            var resopnse = new InsertBulkProductResponse
+            {
+                Success = insertCount > 0,
+                InsertCount= insertCount,
+            };
+
+            return resopnse;
         }
 
         public override Task<Empty> Test(Empty request, ServerCallContext context)

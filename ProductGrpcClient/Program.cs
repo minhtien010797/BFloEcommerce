@@ -14,13 +14,45 @@ static async Task RunConsole()
     var client = new ProductProtoService.ProductProtoServiceClient(channel);
 
     //await GetProductAsync(client);
-    await GetAllProductsAsync(client);
-    await AddProductsAsync(client);
+    //await GetAllProductsAsync(client);
+    //await AddProductsAsync(client);
 
-    await UpdateProductAsync(client);
-    await DeleteProductAsync(client);
+    //await UpdateProductAsync(client);
+    //await DeleteProductAsync(client);
+
+    await GetAllProductsAsync(client);
+    await InsertBulkProduct(client);
+    await GetAllProductsAsync(client);
 
     Console.ReadLine();
+}
+
+static async Task InsertBulkProduct(ProductProtoService.ProductProtoServiceClient client)
+{
+    Console.WriteLine("InsertBulkProduct started..........");
+
+    using var clientBulk = client.InsertBulkProduct();
+
+    for (int i = 0; i < 3; i++)
+    {
+        var productModel = new ProductModel
+        {
+            ProductId = Guid.NewGuid().ToString(),
+            Name = $"Product {i}",
+            Description = "Bulk Insert Product",
+            Price = 799,
+            Status = ProductStatus.Instock,
+            CreatedTime = Timestamp.FromDateTime(DateTime.UtcNow)
+        };
+
+        await clientBulk.RequestStream.WriteAsync(productModel);
+    }
+
+    await clientBulk.RequestStream.CompleteAsync();
+
+    var responseBulk = await clientBulk;
+
+    Console.WriteLine("InsertBulkProduct Response: " + responseBulk.InsertCount.ToString());
 }
 
 static async Task DeleteProductAsync(ProductProtoService.ProductProtoServiceClient client)
