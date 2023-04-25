@@ -7,7 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductGrpc", "ProductGrpc\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductGrpcClient", "ProductGrpcClient\ProductGrpcClient.csproj", "{1703115F-B233-4897-9896-E321366028DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductWorkerService", "ProductWorkerService\ProductWorkerService.csproj", "{18DBA103-123C-4222-84DA-1603D001CE3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductWorkerService", "ProductWorkerService\ProductWorkerService.csproj", "{18DBA103-123C-4222-84DA-1603D001CE3D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Product", "Product", "{960ACEEA-D7F9-4273-B3C3-2CD81E8FDCF2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShoppingCart", "ShoppingCart", "{462A8515-E151-4823-B6AE-1A6D9DF2EFD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +34,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{91F18F5B-AFEC-4F9A-92EA-200D784FF6BE} = {960ACEEA-D7F9-4273-B3C3-2CD81E8FDCF2}
+		{1703115F-B233-4897-9896-E321366028DA} = {960ACEEA-D7F9-4273-B3C3-2CD81E8FDCF2}
+		{18DBA103-123C-4222-84DA-1603D001CE3D} = {960ACEEA-D7F9-4273-B3C3-2CD81E8FDCF2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4BA8FBE2-AF6D-423D-AFA7-785D780A9569}
